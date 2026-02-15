@@ -1,0 +1,98 @@
+id,trade_id,category,name,unit,price_min,price_max,price_default,notes,is_extra,is_active
+10,1,Doors,Install/Adjust Interior Door (no trim),EA,120.00,220.00,120.00,$120–$220/EA,f,t
+11,1,Doors,Interior Door Complete (install + trim),EA,180.00,320.00,180.00,$180–$320/EA (package),f,t
+12,1,Doors Ext,Install Exterior Door (standard),EA,450.00,900.00,450.00,$450–$900/EA,f,t
+13,1,Doors Ext,Large Door (French/Slider/Double),EA,700.00,1500.00,700.00,"$700–$1,500+/EA",f,t
+18,1,Jamb,"2"" Extension – Door/Slider (standard)",EA,90.00,180.00,90.00,$90–$180/EA,f,t
+17,1,Jamb,"2"" Extension – Window (standard)",EA,60.00,120.00,60.00,$60–$120/EA,f,t
+20,1,Jamb,Full Interior Box – Exterior Door,EA,220.00,380.00,220.00,$220–$380/EA,f,t
+19,1,Jamb,Full Interior Box – Window,EA,180.00,300.00,180.00,$180–$300/EA,f,t
+32,1,Shiplap,Bigboard / Wood Ceiling,SF,14.00,22.00,14.00,$14–$22/SF,f,t
+31,1,Shiplap,Shiplap – Ceiling (interior),SF,14.00,24.00,14.00,$14–$24/SF,f,t
+30,1,Shiplap,Shiplap – Wall (interior),SF,10.00,18.00,10.00,$10–$18/SF,f,t
+29,1,Stairs,Handrail Bracket (hard wall),EA,40.00,65.00,40.00,$40–$65/EA,f,t
+28,1,Stairs,Handrail Bracket (standard),EA,25.00,45.00,25.00,$25–$45/EA,f,t
+26,1,Stairs,Handrail – Wood (interior),LF,70.00,120.00,70.00,$70–$120/LF,f,t
+27,1,Stairs,Handrail – with Curve/Angle,LF,95.00,160.00,95.00,$95–$160/LF,f,t
+22,1,Stairs,Risers,EA,45.00,80.00,45.00,$45–$80/step,f,t
+23,1,Stairs,Skirt / Lateral (1 side),EA,65.00,120.00,65.00,$65–$120/step,f,t
+24,1,Stairs,Skirt Double (2 sides),EA,120.00,220.00,120.00,$120–$220/step,f,t
+25,1,Stairs,Skirt Top Molding,LF,18.00,30.00,18.00,$18–$30/LF,f,t
+21,1,Stairs,Treads / Steps,EA,75.00,130.00,75.00,$75–$130/step,f,t
+1,1,Trim,Baseboard,LF,6.00,10.00,6.00,$6–$10/LF,f,t
+2,1,Trim,Crown Molding,LF,10.00,18.00,10.00,$10–$18/LF,f,t
+3,1,Trim,Interior Door Trim (only),EA,140.00,280.00,140.00,$140–$280/EA,f,t
+4,1,Trim,Interior Window Trim (only),EA,120.00,220.00,120.00,$120–$220/EA,f,t
+9,1,Trim Ext,Exterior Bigboard,SF,18.00,30.00,18.00,$18–$30/SF,f,t
+6,1,Trim Ext,Exterior Door Trim (PVC/EZ),EA,140.00,320.00,140.00,$140–$320/EA,f,t
+8,1,Trim Ext,Exterior Shiplap,SF,18.00,30.00,18.00,$18–$30/SF,f,t
+5,1,Trim Ext,Exterior Window Trim (PVC/EZ),EA,110.00,250.00,110.00,$110–$250/EA,f,t
+7,1,Trim Ext,Gable / Frontão (trim + detail),JOB,1200.00,3500.00,1200.00,"$1,200–$3,500/JOB",f,t
+14,1,Windows,Interior Window Complete (box + trim),EA,280.00,420.00,280.00,$280–$420/EA (package),f,t
+15,1,Windows,Window Installation,EA,280.00,600.00,280.00,$280–$600/EA,f,t
+16,1,Windows,Window Int + Ext Package,EA,650.00,780.00,650.00,$650–$780/EA,f,t
+37,2,Deck,Deck Frame (structure),SF,18.00,30.00,18.00,$18–$30/SF,f,t
+35,2,Deck,Deck – Hardwood (Garapa/Ipe/Cumaru),SF,75.00,95.00,75.00,$75–$95/SF,f,t
+36,2,Deck,Deck – Hardwood Premium (oil/finish),SF,95.00,120.00,95.00,$95–$120/SF,f,t
+34,2,Deck,Deck – PVC/Synthetic (Trex/Azek),SF,65.00,95.00,65.00,$65–$95/SF,f,t
+33,2,Deck,Deck – Wood (PT/Pine/Cedar),SF,45.00,65.00,45.00,$45–$65/SF,f,t
+43,2,Deck,EZ / Fascia / Side Wrap,LF,14.00,22.00,14.00,$14–$22/LF,f,t
+39,2,Deck,Frame – Exterior Stairs,JOB,900.00,2500.00,900.00,"$900–$2,500/JOB",f,t
+42,2,Deck,Soffit / Ceiling – Hardwood (Garapa),SF,22.00,35.00,22.00,$22–$35/SF,f,t
+41,2,Deck,Soffit / Ceiling – PVC,SF,18.00,30.00,18.00,$18–$30/SF,f,t
+40,2,Deck,Soffit / Ceiling – Wood,SF,14.00,22.00,14.00,$14–$22/SF,f,t
+38,2,Deck,Steps – Exterior Deck,EA,180.00,350.00,180.00,$180–$350/step,f,t
+46,2,Railing,Railing – Exterior Metal,LF,130.00,220.00,130.00,$130–$220/LF,f,t
+45,2,Railing,Railing – Exterior PVC/EZ,LF,120.00,180.00,120.00,$120–$180/LF,f,t
+44,2,Railing,Railing – Exterior Wood,LF,90.00,150.00,90.00,$90–$150/LF,f,t
+48,2,Railing,Railing – Interior Metal,LF,90.00,160.00,90.00,$90–$160/LF,f,t
+49,2,Railing,Railing – Interior PVC,LF,95.00,150.00,95.00,$95–$150/LF,f,t
+47,2,Railing,Railing – Interior Wood,LF,70.00,120.00,70.00,$70–$120/LF,f,t
+52,3,Kitchen,Cabinets Install – High End,LF,160.00,240.00,160.00,$160–$240/LF,f,t
+51,3,Kitchen,Cabinets Install – Medium,LF,120.00,180.00,120.00,$120–$180/LF,f,t
+50,3,Kitchen,Cabinets Install – Simple,LF,80.00,140.00,80.00,$80–$140/LF,f,t
+53,3,Kitchen,Kitchen Trim / Finish,JOB,250.00,900.00,250.00,$250–$900/JOB,f,t
+54,3,Kitchen,Microwave Installation,EA,150.00,300.00,150.00,$150–$300/EA,f,t
+55,3,Kitchen,Range Hood / Coifa Install,EA,180.00,380.00,180.00,$180–$380/EA,f,t
+57,4,Flooring,Floor Transitions / Trim,EA,35.00,90.00,35.00,$35–$90/EA,f,t
+56,4,Flooring,LVP / Vinyl – Installation,SF,3.00,6.00,3.00,$3–$6/SF,f,t
+59,5,Extras,Fireplace Frame (frame only),JOB,850.00,1600.00,850.00,"$850–$1,600/JOB",t,t
+58,5,Extras,Shelf / Prateleira,EA,180.00,420.00,180.00,$180–$420/EA,t,t
+60,5,Extras,Small Fixes / Hourly,HR,65.00,110.00,65.00,$65–$110/HR,t,t
+61,5,Other,Custom Item (free text),EA,0.00,0.00,0.00,User types name + qty + price,t,t
+70,6,Exterior Paint,Deck / Fence Stain,SF,2.00,5.00,3.00,$2–$5/SF,f,t
+69,6,Exterior Paint,Exterior Trim Paint,LF,3.00,6.00,4.00,$3–$6/LF,f,t
+68,6,Exterior Paint,Exterior Walls – Standard,SF,2.00,4.50,3.00,$2–$4.50/SF,f,t
+67,6,Interior Paint,Cabinet Paint – Per Door/Drawer,EA,45.00,90.00,60.00,$45–$90/EA,f,t
+64,6,Interior Paint,Ceiling Paint,SF,1.50,3.00,2.00,$1.50–$3/SF,f,t
+66,6,Interior Paint,Door Paint (per side),EA,80.00,150.00,100.00,$80–$150/EA per side,f,t
+63,6,Interior Paint,Interior Walls – Accent/Dark,SF,2.00,4.00,2.50,$2–$4/SF (extra coats),f,t
+62,6,Interior Paint,Interior Walls – Standard,SF,1.50,3.00,2.00,$1.50–$3/SF,f,t
+65,6,Interior Paint,Trim / Baseboard Paint,LF,2.00,5.00,3.00,$2–$5/LF,f,t
+74,6,Prep,Caulking / Patching,HR,55.00,85.00,65.00,$55–$85/HR,f,t
+71,6,Prep,Pressure Wash – Surface Prep,SF,0.50,1.50,0.75,$0.50–$1.50/SF,f,t
+73,6,Prep,Primer / Seal Coat,SF,0.80,2.00,1.00,$0.80–$2/SF,f,t
+72,6,Prep,Scraping / Sanding Prep,HR,55.00,85.00,65.00,$55–$85/HR,f,t
+80,7,Deep Clean,Deep Clean – Large (2500+ SF),JOB,550.00,850.00,650.00,$550–$850/JOB,f,t
+79,7,Deep Clean,Deep Clean – Medium (1500–2500 SF),JOB,400.00,600.00,480.00,$400–$600/JOB,f,t
+78,7,Deep Clean,Deep Clean – Small (up to 1500 SF),JOB,280.00,450.00,350.00,$280–$450/JOB,f,t
+85,7,Extras,Garage / Basement Cleanout,HR,50.00,85.00,65.00,$50–$85/HR,t,t
+84,7,Extras,Oven / Appliance Deep Clean,EA,40.00,80.00,55.00,$40–$80/EA,t,t
+83,7,Extras,Window Cleaning (per window),EA,8.00,20.00,12.00,$8–$20/EA,t,t
+82,7,Move-Out,Move-Out Clean – Deep,JOB,450.00,750.00,550.00,$450–$750/JOB,f,t
+81,7,Move-Out,Move-Out Clean – Standard,JOB,300.00,500.00,380.00,$300–$500/JOB,f,t
+77,7,Standard Clean,Standard House Clean – Large (2500+ SF),JOB,320.00,500.00,400.00,$320–$500/JOB,f,t
+76,7,Standard Clean,Standard House Clean – Medium (1500–2500 SF),JOB,220.00,350.00,280.00,$220–$350/JOB,f,t
+75,7,Standard Clean,Standard House Clean – Small (up to 1500 SF),JOB,150.00,250.00,180.00,$150–$250/JOB,f,t
+97,8,Extras,Threshold / Transition Strip,EA,35.00,80.00,50.00,$35–$80/EA,t,t
+96,8,Extras,Tile Removal (existing),SF,3.00,7.00,4.50,$3–$7/SF,t,t
+87,8,Floor Tile,Floor Tile – Large Format (24x24+),SF,12.00,20.00,14.00,$12–$20/SF,f,t
+88,8,Floor Tile,Floor Tile – Pattern / Herringbone,SF,15.00,25.00,18.00,$15–$25/SF,f,t
+86,8,Floor Tile,Floor Tile – Standard (up to 12x24),SF,8.00,15.00,10.00,$8–$15/SF,f,t
+93,8,Grout & Prep,Grout – Epoxy,SF,4.00,8.00,5.00,$4–$8/SF,f,t
+92,8,Grout & Prep,Grout – Standard (sanded/unsanded),SF,2.00,4.00,2.50,$2–$4/SF,f,t
+94,8,Grout & Prep,Surface Prep / Leveling,SF,2.00,5.00,3.00,$2–$5/SF,f,t
+95,8,Grout & Prep,Waterproofing Membrane,SF,3.00,6.00,4.00,$3–$6/SF,f,t
+91,8,Wall Tile,Wall Tile – Accent / Mosaic,SF,18.00,35.00,22.00,$18–$35/SF,f,t
+89,8,Wall Tile,Wall Tile – Backsplash,SF,10.00,22.00,14.00,$10–$22/SF,f,t
+90,8,Wall Tile,Wall Tile – Shower/Tub Surround,SF,12.00,25.00,16.00,$12–$25/SF,f,t

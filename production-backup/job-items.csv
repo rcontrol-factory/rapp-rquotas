@@ -1,0 +1,3 @@
+id,job_id,service_id,service_name,qty,unit_price,line_total
+1,2,4,Interior Window Trim (only),23,120.00,2760
+2,2,12,Install Exterior Door (standard),3,450.00,1350
