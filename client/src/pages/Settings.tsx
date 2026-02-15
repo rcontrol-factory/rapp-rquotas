@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // ✅ FIX BUILD: usar path relativo (mata o ENOENT no Cloudflare)
-import { useSettings, useUpdateSettings } from "../hooks/use-settings";
+import { useSettings, useUpdateSettings } from "../hooks/use-settings.ts";
 import {
   insertCompanySettingsSchema,
   type InsertCompanySettings,
