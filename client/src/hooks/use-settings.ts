@@ -1,33 +1,33 @@
+// client/src/hooks/use-settings.ts
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { InsertCompanySettings } from "@shared/schema";
-import { useToast } from "@/hooks/use-toast";
-import { useLocale } from "@/hooks/use-locale";
+import { apiRequest, queryClient } from "../lib/queryClient";
+
+/**
+ * Ajuste os endpoints aqui se o seu backend usar outro caminho.
+ * Pelo seu projeto, o mais comum é /api/settings
+ */
+const SETTINGS_ENDPOINT = "/api/settings";
+
+export type CompanySettings = any;
 
 export function useSettings() {
-  return useQuery({
-    queryKey: ["/api/settings"],
+  return useQuery<CompanySettings>({
+    queryKey: [SETTINGS_ENDPOINT],
+    queryFn: async () => {
+      const res = await apiRequest("GET", SETTINGS_ENDPOINT);
+      return res.json();
+    },
   });
 }
 
 export function useUpdateSettings() {
-  const { toast } = useToast();
-  const { locale } = useLocale();
-
   return useMutation({
-    mutationFn: async (data: InsertCompanySettings) => {
-      await apiRequest("PUT", "/api/settings", data);
+    mutationFn: async (payload: any) => {
+      const res = await apiRequest("PUT", SETTINGS_ENDPOINT, payload);
+      return res.json();
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["/api/settings"] });
-      toast({
-        title: locale === "pt" ? "Configurações salvas" : "Settings saved",
-      });
-    },
-    onError: () => {
-      toast({
-        title: locale === "pt" ? "Erro ao salvar" : "Failed to save",
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [SETTINGS_ENDPOINT] });
     },
   });
 }
