@@ -1,22 +1,65 @@
+// client/src/pages/Settings.tsx
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSettings, useUpdateSettings } from "@/hooks/use-settings";
-import { insertCompanySettingsSchema, type InsertCompanySettings, type Permissions, type Trade, type Specialty } from "@shared/schema";
-import { useRegions } from "@/hooks/use-catalog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Loader2, Shield, MapPin, Wrench, Check, UserPlus, Link2, Copy, Power, PowerOff } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
-import { useLocale } from "@/hooks/use-locale";
+
+import { useSettings, useUpdateSettings } from "../hooks/use-settings";
+import {
+  insertCompanySettingsSchema,
+  type InsertCompanySettings,
+  type Permissions,
+  type Trade,
+  type Specialty,
+} from "../../../shared/schema";
+import { useRegions } from "../hooks/use-catalog";
+
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Switch } from "../components/ui/switch";
+
+import {
+  Loader2,
+  Shield,
+  MapPin,
+  Wrench,
+  Check,
+  UserPlus,
+  Link2,
+  Copy,
+  Power,
+  PowerOff,
+} from "lucide-react";
+
+import { useAuth } from "../hooks/use-auth";
+import { useLocale } from "../hooks/use-locale";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import type { StringKey } from "@/lib/i18n";
+import { apiRequest, queryClient } from "../lib/queryClient";
+import { useToast } from "../hooks/use-toast";
+import type { StringKey } from "../lib/i18n";
 
 const PERM_KEYS: { key: keyof Permissions; label: StringKey }[] = [
   { key: "canManageUsers", label: "permManageUsers" },
@@ -34,8 +77,18 @@ function CompanyEmployeePermissions({ t }: { t: (k: StringKey) => string }) {
   });
 
   const updatePerm = useMutation({
-    mutationFn: async ({ userId, permKey, value }: { userId: number; permKey: string; value: boolean }) => {
-      await apiRequest("PATCH", `/api/admin/users/${userId}/permissions`, { [permKey]: value });
+    mutationFn: async ({
+      userId,
+      permKey,
+      value,
+    }: {
+      userId: number;
+      permKey: string;
+      value: boolean;
+    }) => {
+      await apiRequest("PATCH", `/api/admin/users/${userId}/permissions`, {
+        [permKey]: value,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] });
@@ -64,22 +117,36 @@ function CompanyEmployeePermissions({ t }: { t: (k: StringKey) => string }) {
       </CardHeader>
       <CardContent className="space-y-4">
         {employees.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4" data-testid="text-no-employees">
+          <p
+            className="text-sm text-muted-foreground text-center py-4"
+            data-testid="text-no-employees"
+          >
             {t("noEmployees")}
           </p>
         ) : (
           employees.map((emp: any) => {
             const perms: Permissions = emp.permissions;
             return (
-              <div key={emp.id} className="border rounded-md p-4 space-y-3" data-testid={`company-member-${emp.id}`}>
+              <div
+                key={emp.id}
+                className="border rounded-md p-4 space-y-3"
+                data-testid={`company-member-${emp.id}`}
+              >
                 <span className="text-sm font-medium block">{emp.username}</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {PERM_KEYS.map(({ key, label }) => (
-                    <label key={key} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <label
+                      key={key}
+                      className="flex items-center gap-2 text-sm cursor-pointer"
+                    >
                       <Switch
                         checked={!!perms[key]}
                         onCheckedChange={(checked) =>
-                          updatePerm.mutate({ userId: emp.id, permKey: key, value: checked })
+                          updatePerm.mutate({
+                            userId: emp.id,
+                            permKey: key,
+                            value: checked,
+                          })
                         }
                         data-testid={`switch-company-${key}-${emp.id}`}
                       />
@@ -96,9 +163,19 @@ function CompanyEmployeePermissions({ t }: { t: (k: StringKey) => string }) {
   );
 }
 
-function UserSpecialtyEditor({ userId, username, t }: { userId: number; username: string; t: (k: StringKey) => string }) {
+function UserSpecialtyEditor({
+  userId,
+  username,
+  t,
+}: {
+  userId: number;
+  username: string;
+  t: (k: StringKey) => string;
+}) {
   const { toast } = useToast();
-  const { data: allSpecialties = [] } = useQuery<Specialty[]>({ queryKey: ["/api/specialties"] });
+  const { data: allSpecialties = [] } = useQuery<Specialty[]>({
+    queryKey: ["/api/specialties"],
+  });
   const { data: trades = [] } = useQuery<Trade[]>({ queryKey: ["/api/trades"] });
   const { data: userSpecs = [], isLoading } = useQuery<Specialty[]>({
     queryKey: ["/api/admin/users", userId, "specialties"],
@@ -109,7 +186,7 @@ function UserSpecialtyEditor({ userId, username, t }: { userId: number; username
 
   useEffect(() => {
     if (userSpecs.length > 0 && !initialized) {
-      setSelected(new Set(userSpecs.map(s => s.id)));
+      setSelected(new Set(userSpecs.map((s) => s.id)));
       setInitialized(true);
     }
   }, [userSpecs, initialized]);
@@ -120,16 +197,20 @@ function UserSpecialtyEditor({ userId, username, t }: { userId: number; username
 
   const saveMutation = useMutation({
     mutationFn: async (specialtyIds: number[]) => {
-      await apiRequest("PUT", `/api/admin/users/${userId}/specialties`, { specialtyIds });
+      await apiRequest("PUT", `/api/admin/users/${userId}/specialties`, {
+        specialtyIds,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/users", userId, "specialties"] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/admin/users", userId, "specialties"],
+      });
       toast({ title: t("specialtiesUpdated") });
     },
   });
 
   const toggle = (id: number) => {
-    setSelected(prev => {
+    setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -143,10 +224,10 @@ function UserSpecialtyEditor({ userId, username, t }: { userId: number; username
   };
 
   const tradeMap = new Map<number, Trade>();
-  trades.forEach(tr => tradeMap.set(tr.id, tr));
+  trades.forEach((tr) => tradeMap.set(tr.id, tr));
 
   const grouped = new Map<number, { trade: Trade; specs: Specialty[] }>();
-  allSpecialties.forEach(sp => {
+  allSpecialties.forEach((sp) => {
     if (!grouped.has(sp.tradeId)) {
       const trade = tradeMap.get(sp.tradeId);
       if (trade) grouped.set(sp.tradeId, { trade, specs: [] });
@@ -161,9 +242,11 @@ function UserSpecialtyEditor({ userId, username, t }: { userId: number; username
       <span className="text-sm font-medium block">{username}</span>
       {Array.from(grouped.values()).map(({ trade, specs }) => (
         <div key={trade.id} className="space-y-1.5">
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{trade.name}</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            {trade.name}
+          </span>
           <div className="flex flex-wrap gap-1.5">
-            {specs.map(sp => {
+            {specs.map((sp) => {
               const isSelected = selected.has(sp.id);
               return (
                 <Button
@@ -215,7 +298,9 @@ function ManageSpecialties({ t }: { t: (k: StringKey) => string }) {
     );
   }
 
-  const allMembers = user ? [{ id: user.id, username: user.username }, ...employees.filter(e => e.id !== user.id)] : employees;
+  const allMembers = user
+    ? [{ id: user.id, username: user.username }, ...employees.filter((e) => e.id !== user.id)]
+    : employees;
 
   return (
     <Card data-testid="card-manage-specialties">
@@ -283,7 +368,8 @@ function EmployeeManagement({ locale }: { locale: string }) {
 
   const getTokenStatus = (token: any) => {
     if (token.usedByUserId) return locale === "pt" ? "Usado" : "Used";
-    if (token.expiresAt && new Date(token.expiresAt) < new Date()) return locale === "pt" ? "Expirado" : "Expired";
+    if (token.expiresAt && new Date(token.expiresAt) < new Date())
+      return locale === "pt" ? "Expirado" : "Expired";
     return locale === "pt" ? "Ativo" : "Active";
   };
 
@@ -305,19 +391,22 @@ function EmployeeManagement({ locale }: { locale: string }) {
           {locale === "pt" ? "Gerenciar Funcionarios" : "Employee Management"}
         </CardTitle>
         <CardDescription>
-          {locale === "pt" ? "Convide novos funcionarios e gerencie a equipe." : "Invite new employees and manage your team."}
+          {locale === "pt"
+            ? "Convide novos funcionarios e gerencie a equipe."
+            : "Invite new employees and manage your team."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <h3 className="text-sm font-medium">
-              {locale === "pt" ? "Funcionarios" : "Employees"}
-            </h3>
+            <h3 className="text-sm font-medium">{locale === "pt" ? "Funcionarios" : "Employees"}</h3>
             <Button
               size="sm"
               variant={showInviteForm ? "secondary" : "default"}
-              onClick={() => { setShowInviteForm(!showInviteForm); setInviteLink(""); }}
+              onClick={() => {
+                setShowInviteForm(!showInviteForm);
+                setInviteLink("");
+              }}
               data-testid="button-invite-employee"
             >
               <UserPlus className="w-4 h-4 mr-1.5" />
@@ -329,9 +418,7 @@ function EmployeeManagement({ locale }: { locale: string }) {
             <div className="border rounded-md p-4 space-y-3">
               <div className="flex items-end gap-2 flex-wrap">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">
-                    {locale === "pt" ? "Cargo" : "Role"}
-                  </label>
+                  <label className="text-sm font-medium">{locale === "pt" ? "Cargo" : "Role"}</label>
                   <Select value={inviteRole} onValueChange={setInviteRole}>
                     <SelectTrigger className="w-[140px]" data-testid="select-invite-role">
                       <SelectValue />
@@ -353,14 +440,10 @@ function EmployeeManagement({ locale }: { locale: string }) {
                   {locale === "pt" ? "Gerar Link" : "Generate Link"}
                 </Button>
               </div>
+
               {inviteLink && (
                 <div className="flex items-center gap-2">
-                  <Input
-                    readOnly
-                    value={inviteLink}
-                    className="flex-1 text-xs"
-                    data-testid="input-invite-link"
-                  />
+                  <Input readOnly value={inviteLink} className="flex-1 text-xs" data-testid="input-invite-link" />
                   <Button size="icon" variant="outline" onClick={copyLink} data-testid="button-copy-invite">
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -382,19 +465,34 @@ function EmployeeManagement({ locale }: { locale: string }) {
                   data-testid={`employee-row-${emp.id}`}
                 >
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-medium" data-testid={`text-employee-username-${emp.id}`}>{emp.username}</span>
-                    <span className="text-xs text-muted-foreground" data-testid={`text-employee-role-${emp.id}`}>{emp.role}</span>
+                    <span className="text-sm font-medium" data-testid={`text-employee-username-${emp.id}`}>
+                      {emp.username}
+                    </span>
+                    <span className="text-xs text-muted-foreground" data-testid={`text-employee-role-${emp.id}`}>
+                      {emp.role}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-xs ${emp.isActive !== false ? "text-green-600" : "text-muted-foreground"}`} data-testid={`text-employee-status-${emp.id}`}>
+                    <span
+                      className={`text-xs ${
+                        emp.isActive !== false ? "text-green-600" : "text-muted-foreground"
+                      }`}
+                      data-testid={`text-employee-status-${emp.id}`}
+                    >
                       {emp.isActive !== false
-                        ? (locale === "pt" ? "Ativo" : "Active")
-                        : (locale === "pt" ? "Inativo" : "Inactive")}
+                        ? locale === "pt"
+                          ? "Ativo"
+                          : "Active"
+                        : locale === "pt"
+                        ? "Inativo"
+                        : "Inactive"}
                     </span>
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={() => toggleActive.mutate({ userId: emp.id, isActive: emp.isActive === false })}
+                      onClick={() =>
+                        toggleActive.mutate({ userId: emp.id, isActive: emp.isActive === false })
+                      }
                       data-testid={`button-toggle-employee-${emp.id}`}
                     >
                       {emp.isActive !== false ? <Power className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />}
@@ -408,9 +506,7 @@ function EmployeeManagement({ locale }: { locale: string }) {
 
         {!loadingTokens && inviteTokens.length > 0 && (
           <div className="space-y-2">
-            <h3 className="text-sm font-medium">
-              {locale === "pt" ? "Convites" : "Invitations"}
-            </h3>
+            <h3 className="text-sm font-medium">{locale === "pt" ? "Convites" : "Invitations"}</h3>
             {inviteTokens.map((token: any, idx: number) => (
               <div
                 key={token.id || idx}
@@ -418,16 +514,21 @@ function EmployeeManagement({ locale }: { locale: string }) {
                 data-testid={`invite-token-${token.id || idx}`}
               >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-mono text-muted-foreground">{token.token?.slice(0, 12)}...</span>
+                  <span className="text-xs font-mono text-muted-foreground">
+                    {token.token?.slice(0, 12)}...
+                  </span>
                   <span className="text-xs text-muted-foreground">{token.role}</span>
                 </div>
-                <span className={`text-xs font-medium ${
-                  getTokenStatus(token) === "Active" || getTokenStatus(token) === "Ativo"
-                    ? "text-green-600"
-                    : getTokenStatus(token) === "Used" || getTokenStatus(token) === "Usado"
-                    ? "text-blue-600"
-                    : "text-muted-foreground"
-                }`} data-testid={`text-token-status-${token.id || idx}`}>
+                <span
+                  className={`text-xs font-medium ${
+                    getTokenStatus(token) === "Active" || getTokenStatus(token) === "Ativo"
+                      ? "text-green-600"
+                      : getTokenStatus(token) === "Used" || getTokenStatus(token) === "Usado"
+                      ? "text-blue-600"
+                      : "text-muted-foreground"
+                  }`}
+                  data-testid={`text-token-status-${token.id || idx}`}
+                >
                   {getTokenStatus(token)}
                 </span>
               </div>
@@ -475,13 +576,19 @@ function SettingsForm() {
   };
 
   if (isLoading) {
-    return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-primary" /></div>;
+    return (
+      <div className="flex justify-center p-12">
+        <Loader2 className="animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight" data-testid="text-settings-title">{t("settings")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight" data-testid="text-settings-title">
+          {t("settings")}
+        </h1>
         <p className="text-muted-foreground mt-1">{t("configureDefaults")}</p>
       </div>
 
@@ -586,7 +693,13 @@ function SettingsForm() {
                     <FormItem>
                       <FormLabel>{t("defaultTaxRate")}</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} value={field.value ?? ""} data-testid="input-tax-rate" />
+                        <Input
+                          type="number"
+                          step="0.01"
+                          {...field}
+                          value={field.value ?? ""}
+                          data-testid="input-tax-rate"
+                        />
                       </FormControl>
                       <FormDescription>{t("taxRateDescription")}</FormDescription>
                       <FormMessage />
@@ -601,9 +714,17 @@ function SettingsForm() {
                     <FormItem>
                       <FormLabel>{t("overheadRate" as any) || "Overhead Rate (%)"}</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} value={field.value ?? ""} data-testid="input-overhead-rate" />
+                        <Input
+                          type="number"
+                          step="0.01"
+                          {...field}
+                          value={field.value ?? ""}
+                          data-testid="input-overhead-rate"
+                        />
                       </FormControl>
-                      <FormDescription>{t("overheadRateDescription" as any) || "Applied to subtotal for overhead costs"}</FormDescription>
+                      <FormDescription>
+                        {t("overheadRateDescription" as any) || "Applied to subtotal for overhead costs"}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -616,7 +737,13 @@ function SettingsForm() {
                     <FormItem>
                       <FormLabel>{t("profitRate" as any) || "Profit Rate (%)"}</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} value={field.value ?? ""} data-testid="input-profit-rate" />
+                        <Input
+                          type="number"
+                          step="0.01"
+                          {...field}
+                          value={field.value ?? ""}
+                          data-testid="input-profit-rate"
+                        />
                       </FormControl>
                       <FormDescription>{t("profitRateDescription" as any) || "Profit margin percentage"}</FormDescription>
                       <FormMessage />
