@@ -1,21 +1,17 @@
-// client/src/pages/Settings.tsx
-
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useSettings, useUpdateSettings } from "../hooks/use-settings";
+import { useSettings, useUpdateSettings } from "@/hooks/use-settings.ts";
 import {
   insertCompanySettingsSchema,
   type InsertCompanySettings,
   type Permissions,
   type Trade,
   type Specialty,
-} from "../../../shared/schema";
-import { useRegions } from "../hooks/use-catalog";
-
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
+} from "@shared/schema";
+import { useRegions } from "@/hooks/use-catalog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -24,23 +20,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../components/ui/form";
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
+} from "@/components/ui/select";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Switch } from "../components/ui/switch";
-
+} from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import {
   Loader2,
   Shield,
@@ -53,13 +48,12 @@ import {
   Power,
   PowerOff,
 } from "lucide-react";
-
-import { useAuth } from "../hooks/use-auth";
-import { useLocale } from "../hooks/use-locale";
+import { useAuth } from "@/hooks/use-auth";
+import { useLocale } from "@/hooks/use-locale";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "../lib/queryClient";
-import { useToast } from "../hooks/use-toast";
-import type { StringKey } from "../lib/i18n";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import type { StringKey } from "@/lib/i18n";
 
 const PERM_KEYS: { key: keyof Permissions; label: StringKey }[] = [
   { key: "canManageUsers", label: "permManageUsers" },
@@ -235,10 +229,14 @@ function UserSpecialtyEditor({
     grouped.get(sp.tradeId)?.specs.push(sp);
   });
 
-  if (isLoading) return <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />;
+  if (isLoading)
+    return <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />;
 
   return (
-    <div className="border rounded-md p-4 space-y-3" data-testid={`specialty-editor-${userId}`}>
+    <div
+      className="border rounded-md p-4 space-y-3"
+      data-testid={`specialty-editor-${userId}`}
+    >
       <span className="text-sm font-medium block">{username}</span>
       {Array.from(grouped.values()).map(({ trade, specs }) => (
         <div key={trade.id} className="space-y-1.5">
@@ -256,7 +254,9 @@ function UserSpecialtyEditor({
                   size="sm"
                   data-testid={`button-spec-${userId}-${sp.slug}`}
                   onClick={() => toggle(sp.id)}
-                  className={`toggle-elevate ${isSelected ? "toggle-elevated" : ""}`}
+                  className={`toggle-elevate ${
+                    isSelected ? "toggle-elevated" : ""
+                  }`}
                 >
                   {isSelected && <Check className="w-3 h-3" />}
                   {sp.name}
@@ -273,103 +273,18 @@ function UserSpecialtyEditor({
           onClick={handleSave}
           data-testid={`button-save-specs-${userId}`}
         >
-          {saveMutation.isPending && <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />}
+          {saveMutation.isPending && (
+            <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
+          )}
           {saveMutation.isPending ? t("saving") : t("saveChanges")}
         </Button>
       </div>
     </div>
   );
 }
-
-function ManageSpecialties({ t }: { t: (k: StringKey) => string }) {
-  const { data: employees = [], isLoading } = useQuery<any[]>({
-    queryKey: ["/api/admin/users"],
-  });
-
-  const { user } = useAuth();
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="flex justify-center p-8">
-          <Loader2 className="animate-spin text-muted-foreground" />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const allMembers = user
-    ? [{ id: user.id, username: user.username }, ...employees.filter((e) => e.id !== user.id)]
-    : employees;
-
-  return (
-    <Card data-testid="card-manage-specialties">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Wrench className="w-5 h-5 text-muted-foreground" />
-          {t("manageSpecialties")}
-        </CardTitle>
-        <CardDescription>{t("manageSpecialtiesDesc")}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {allMembers.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">{t("noEmployees")}</p>
-        ) : (
-          allMembers.map((emp: any) => (
-            <UserSpecialtyEditor key={emp.id} userId={emp.id} username={emp.username} t={t} />
-          ))
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function EmployeeManagement({ locale }: { locale: string }) {
-  const { toast } = useToast();
-  const [showInviteForm, setShowInviteForm] = useState(false);
-  const [inviteRole, setInviteRole] = useState("USER");
-  const [inviteLink, setInviteLink] = useState("");
-
-  const { data: employees = [], isLoading: loadingEmployees } = useQuery<any[]>({
-    queryKey: ["/api/employees"],
-  });
-
-  const { data: inviteTokens = [], isLoading: loadingTokens } = useQuery<any[]>({
-    queryKey: ["/api/invite/list"],
-  });
-
-  const toggleActive = useMutation({
-    mutationFn: async ({ userId, isActive }: { userId: number; isActive: boolean }) => {
-      await apiRequest("PUT", `/api/employees/${userId}/active`, { isActive });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/employees"] });
-      toast({ title: locale === "pt" ? "Status atualizado" : "Status updated" });
-    },
-  });
-
-  const generateInvite = useMutation({
-    mutationFn: async () => {
-      const res = await apiRequest("POST", "/api/invite/create", { role: inviteRole, expiresDays: 7 });
-      return res.json();
-    },
-    onSuccess: (data: any) => {
-      const link = `${window.location.origin}/signup/${data.token}`;
-      setInviteLink(link);
-      queryClient.invalidateQueries({ queryKey: ["/api/invite/list"] });
-      toast({ title: locale === "pt" ? "Link gerado" : "Link generated" });
-    },
-  });
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(inviteLink);
-    toast({ title: locale === "pt" ? "Link copiado" : "Link copied" });
-  };
-
   const getTokenStatus = (token: any) => {
     if (token.usedByUserId) return locale === "pt" ? "Usado" : "Used";
-    if (token.expiresAt && new Date(token.expiresAt) < new Date())
-      return locale === "pt" ? "Expirado" : "Expired";
+    if (token.expiresAt && new Date(token.expiresAt) < new Date()) return locale === "pt" ? "Expirado" : "Expired";
     return locale === "pt" ? "Ativo" : "Active";
   };
 
@@ -396,10 +311,12 @@ function EmployeeManagement({ locale }: { locale: string }) {
             : "Invite new employees and manage your team."}
         </CardDescription>
       </CardHeader>
+
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <h3 className="text-sm font-medium">{locale === "pt" ? "Funcionarios" : "Employees"}</h3>
+
             <Button
               size="sm"
               variant={showInviteForm ? "secondary" : "default"}
@@ -429,6 +346,7 @@ function EmployeeManagement({ locale }: { locale: string }) {
                     </SelectContent>
                   </Select>
                 </div>
+
                 <Button
                   size="default"
                   onClick={() => generateInvite.mutate()}
@@ -472,27 +390,19 @@ function EmployeeManagement({ locale }: { locale: string }) {
                       {emp.role}
                     </span>
                   </div>
+
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs ${
-                        emp.isActive !== false ? "text-green-600" : "text-muted-foreground"
-                      }`}
+                      className={`text-xs ${emp.isActive !== false ? "text-green-600" : "text-muted-foreground"}`}
                       data-testid={`text-employee-status-${emp.id}`}
                     >
-                      {emp.isActive !== false
-                        ? locale === "pt"
-                          ? "Ativo"
-                          : "Active"
-                        : locale === "pt"
-                        ? "Inativo"
-                        : "Inactive"}
+                      {emp.isActive !== false ? (locale === "pt" ? "Ativo" : "Active") : (locale === "pt" ? "Inativo" : "Inactive")}
                     </span>
+
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={() =>
-                        toggleActive.mutate({ userId: emp.id, isActive: emp.isActive === false })
-                      }
+                      onClick={() => toggleActive.mutate({ userId: emp.id, isActive: emp.isActive === false })}
                       data-testid={`button-toggle-employee-${emp.id}`}
                     >
                       {emp.isActive !== false ? <Power className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />}
@@ -507,6 +417,7 @@ function EmployeeManagement({ locale }: { locale: string }) {
         {!loadingTokens && inviteTokens.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-sm font-medium">{locale === "pt" ? "Convites" : "Invitations"}</h3>
+
             {inviteTokens.map((token: any, idx: number) => (
               <div
                 key={token.id || idx}
@@ -514,11 +425,10 @@ function EmployeeManagement({ locale }: { locale: string }) {
                 data-testid={`invite-token-${token.id || idx}`}
               >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-mono text-muted-foreground">
-                    {token.token?.slice(0, 12)}...
-                  </span>
+                  <span className="text-xs font-mono text-muted-foreground">{token.token?.slice(0, 12)}...</span>
                   <span className="text-xs text-muted-foreground">{token.role}</span>
                 </div>
+
                 <span
                   className={`text-xs font-medium ${
                     getTokenStatus(token) === "Active" || getTokenStatus(token) === "Ativo"
@@ -539,7 +449,6 @@ function EmployeeManagement({ locale }: { locale: string }) {
     </Card>
   );
 }
-
 function SettingsForm() {
   const { data: settings, isLoading } = useSettings();
   const updateSettings = useUpdateSettings();
@@ -560,12 +469,12 @@ function SettingsForm() {
   useEffect(() => {
     if (settings) {
       form.reset({
-        companyId: settings.companyId,
-        taxRate: settings.taxRate?.toString() || "0",
-        overheadRate: settings.overheadRate?.toString() || "0",
-        profitRate: settings.profitRate?.toString() || "0",
-        defaultLanguage: settings.defaultLanguage || "en",
-        theme: settings.theme || "premium_dark",
+        companyId: (settings as any).companyId,
+        taxRate: (settings as any).taxRate?.toString() || "0",
+        overheadRate: (settings as any).overheadRate?.toString() || "0",
+        profitRate: (settings as any).profitRate?.toString() || "0",
+        defaultLanguage: (settings as any).defaultLanguage || "en",
+        theme: (settings as any).theme || "premium_dark",
         regionId: (settings as any).regionId || undefined,
       });
     }
@@ -628,6 +537,7 @@ function SettingsForm() {
             </CardTitle>
             <CardDescription>{t("regionPricingDesc")}</CardDescription>
           </CardHeader>
+
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -659,6 +569,7 @@ function SettingsForm() {
                     </FormItem>
                   )}
                 />
+
                 <div className="flex justify-end">
                   <Button type="submit" disabled={updateSettings.isPending} data-testid="button-save-region">
                     {updateSettings.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -683,6 +594,7 @@ function SettingsForm() {
             <CardTitle>{t("generalConfiguration")}</CardTitle>
             <CardDescription>{t("settingsApplyDefault")}</CardDescription>
           </CardHeader>
+
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -712,7 +624,7 @@ function SettingsForm() {
                   name="overheadRate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("overheadRate" as any) || "Overhead Rate (%)"}</FormLabel>
+                      <FormLabel>{(t("overheadRate" as any) as any) || "Overhead Rate (%)"}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -723,7 +635,7 @@ function SettingsForm() {
                         />
                       </FormControl>
                       <FormDescription>
-                        {t("overheadRateDescription" as any) || "Applied to subtotal for overhead costs"}
+                        {(t("overheadRateDescription" as any) as any) || "Applied to subtotal for overhead costs"}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -735,7 +647,7 @@ function SettingsForm() {
                   name="profitRate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("profitRate" as any) || "Profit Rate (%)"}</FormLabel>
+                      <FormLabel>{(t("profitRate" as any) as any) || "Profit Rate (%)"}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -745,7 +657,7 @@ function SettingsForm() {
                           data-testid="input-profit-rate"
                         />
                       </FormControl>
-                      <FormDescription>{t("profitRateDescription" as any) || "Profit margin percentage"}</FormDescription>
+                      <FormDescription>{(t("profitRateDescription" as any) as any) || "Profit margin percentage"}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -765,7 +677,6 @@ function SettingsForm() {
     </div>
   );
 }
-
 export default function Settings() {
   return <SettingsForm />;
 }
